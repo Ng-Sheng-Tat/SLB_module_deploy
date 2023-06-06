@@ -20,12 +20,6 @@ def main():
     width = 800
     height = 800
     canvas_resized = False
-
-    # Calculate the y-coordinates of the horizontal lines and the x-coordinates of the vertical lines based on the slider values
-    h_line_min_y = int(height * st.session_state["ymin"] / 100)
-    h_line_max_y = int(height * st.session_state["ymax"] / 100)
-    v_line_min_x = int(width * st.session_state["xmax"] / 100)
-    v_line_max_x = int(width * st.session_state["xmin"] / 100)
     
     with st.sidebar:
         st.markdown("<h2 style='text-align: center;'> <strong>Input<strong> </h2>", unsafe_allow_html=True)
@@ -92,173 +86,179 @@ def main():
         """, unsafe_allow_html=True)
 
     with apps_:
-        columrow = st.columns([1, 1])
-        with columrow[0]:
-            st.markdown("<h3 style='text-align: center;'>Input</h3>", unsafe_allow_html=True)
+        # columrow = st.columns([1, 1])
+        # with columrow[0]:
+        st.markdown("<h3 style='text-align: center;'>Input</h3>", unsafe_allow_html=True)
+        
+        # Calculate the y-coordinates of the horizontal lines and the x-coordinates of the vertical lines based on the slider values
+        h_line_min_y = int(height * st.session_state["ymin"] / 100)
+        h_line_max_y = int(height * st.session_state["ymax"] / 100)
+        v_line_min_x = int(width * st.session_state["xmax"] / 100)
+        v_line_max_x = int(width * st.session_state["xmin"] / 100)
+
+        # Create a canvas component
+        canvas_result = st_canvas(
+            fill_color="rgba(255, 165, 0, 0.3)",  # Fixed fill color with some opacity
+            stroke_width=stroke_width,
+            background_color=bg_color,
+            background_image=image if bg_image else None,
+            update_streamlit=True,
+            drawing_mode='line',
+            initial_drawing={
+                "version": "4.4.0",
+                "objects": [
+                    {
+                        "type": "line",
+                        "version": "4.4.0",
+                        "originX": "center",
+                        "originY": "center",
+                        "left": width / 2,
+                        "top": h_line_min_y,
+                        "width": width,
+                        "height": 0,
+                        "fill": h_line_color_2,
+                        "stroke": h_line_color_2,
+                        "strokeWidth": stroke_width,
+                        "x1": -width / 2,
+                        "x2": width / 2,
+                        "y1": 0,
+                        "y2": 0,
+                    },
+                    {
+                        "type": "line",
+                        "version": "4.4.0",
+                        "originX": "center",
+                        "originY": "center",
+                        "left": width / 2,
+                        "top": h_line_max_y,
+                        "width": width,
+                        "height": 0,
+                        "fill": h_line_color_1,
+                        "stroke": h_line_color_1,
+                        "strokeWidth": stroke_width,
+                        "x1": -width / 2,
+                        "x2": width / 2,
+                        "y1": 0,
+                        "y2": 0,
+                    },
+                    {
+                        "type": "line",
+                        "version": "4.4.0",
+                        "originX": "center",
+                                        "originY": "center",
+                        "left": v_line_min_x,
+                        "top": height / 2,
+                        "width": 0,
+                        "height": height,
+                        "fill": v_line_color_1,
+                        "stroke": v_line_color_1,
+                        "strokeWidth": stroke_width,
+                        "x1": 0,
+                        "x2": 0,
+                        "y1": -height / 2,
+                        "y2": height / 2,
+                    },
+                    {
+                        "type": "line",
+                        "version": "4.4.0",
+                        "originX": "center",
+                        "originY": "center",
+                        "left": v_line_max_x,
+                        "top": height / 2,
+                        "width": 0,
+                        "height": height,
+                        "fill": v_line_color_2,
+                        "stroke": v_line_color_2,
+                        "strokeWidth": stroke_width,
+                        "x1": 0,
+                        "x2": 0,
+                        "y1": -height / 2,
+                        "y2": height / 2,
+                    },
+                ],
+                "background": bg_color,
+            },
+            height=height if canvas_resized else None,
+            width=width if canvas_resized else None,
+        )
+        
+        # Add a button to save the line positions as a CSV file
+        padsave = st.columns(3)
+        with padsave[0]:
+            st.empty()
+        with padsave[1]:
+            if st.button('Save line positions'):
+                df = pd.DataFrame({
+                    'h_line_min_y': [h_line_min_y],
+                    'h_line_max_y': [h_line_max_y],
+                    'v_line_min_x': [v_line_min_x],
+                    'v_line_max_x': [v_line_max_x],
+                    'image_width': [image.size[0]] if bg_image else [None],
+                    'image_height': [image.size[1]] if bg_image else [None],
+                    'body_width': [width],
+                    'body_height': [height]
+                })
+                df.to_csv('line_positions.csv', index=False)
+            st.success('Line positions and image dimensions saved as CSV file')
+        with padsave[2]:
+            st.empty()
+
+        # Save the uploaded image as prediction_target.jpg
+        if bg_image is not None:
+            image = Image.open(bg_image)
+            image.save('prediction_target.jpg')
+        padreset = st.columns(3)
+        with padreset[0]:
+            st.empty()
+        with padreset[1]:
+            if st.button('Reset line positions'):
+                df = pd.DataFrame({
+                    'h_line_min_y': [0],
+                    'h_line_max_y': [0],
+                    'v_line_min_x': [0],
+                    'v_line_max_x': [0],
+                    'image_width': [None],
+                    'image_height': [None],
+                    'body_width': [0],
+                    'body_height': [0]
+                })
+
+                df.to_csv('line_positions.csv', index=False)
+                st.success('Line positions and image dimensions reset to 0')
+            if st.button("Run Prediction"):
+                prediction()
+        with padreset[2]:
+            st.empty()
+
+        # Delete the prediction_target.jpg file
+        if os.path.exists('prediction_target.jpg'):
+            os.remove('prediction_target.jpg')
+
             
-            # Create a canvas component
-            canvas_result = st_canvas(
-                fill_color="rgba(255, 165, 0, 0.3)",  # Fixed fill color with some opacity
-                stroke_width=stroke_width,
-                background_color=bg_color,
-                background_image=image if bg_image else None,
-                update_streamlit=True,
-                drawing_mode='line',
-                initial_drawing={
-                    "version": "4.4.0",
-                    "objects": [
-                        {
-                            "type": "line",
-                            "version": "4.4.0",
-                            "originX": "center",
-                            "originY": "center",
-                            "left": width / 2,
-                            "top": h_line_min_y,
-                            "width": width,
-                            "height": 0,
-                            "fill": h_line_color_2,
-                            "stroke": h_line_color_2,
-                            "strokeWidth": stroke_width,
-                            "x1": -width / 2,
-                            "x2": width / 2,
-                            "y1": 0,
-                            "y2": 0,
-                        },
-                        {
-                            "type": "line",
-                            "version": "4.4.0",
-                            "originX": "center",
-                            "originY": "center",
-                            "left": width / 2,
-                            "top": h_line_max_y,
-                            "width": width,
-                            "height": 0,
-                            "fill": h_line_color_1,
-                            "stroke": h_line_color_1,
-                            "strokeWidth": stroke_width,
-                            "x1": -width / 2,
-                            "x2": width / 2,
-                            "y1": 0,
-                            "y2": 0,
-                        },
-                        {
-                            "type": "line",
-                            "version": "4.4.0",
-                            "originX": "center",
-                                            "originY": "center",
-                            "left": v_line_min_x,
-                            "top": height / 2,
-                            "width": 0,
-                            "height": height,
-                            "fill": v_line_color_1,
-                            "stroke": v_line_color_1,
-                            "strokeWidth": stroke_width,
-                            "x1": 0,
-                            "x2": 0,
-                            "y1": -height / 2,
-                            "y2": height / 2,
-                        },
-                        {
-                            "type": "line",
-                            "version": "4.4.0",
-                            "originX": "center",
-                            "originY": "center",
-                            "left": v_line_max_x,
-                            "top": height / 2,
-                            "width": 0,
-                            "height": height,
-                            "fill": v_line_color_2,
-                            "stroke": v_line_color_2,
-                            "strokeWidth": stroke_width,
-                            "x1": 0,
-                            "x2": 0,
-                            "y1": -height / 2,
-                            "y2": height / 2,
-                        },
-                    ],
-                    "background": bg_color,
-                },
-                height=height if canvas_resized else None,
-                width=width if canvas_resized else None,
+        # with columrow[1]:
+        st.markdown("<h3 style='text-align: center;'>Output</h3>", unsafe_allow_html=True)
+        # to make the button centered aligned
+        result_df = pd.DataFrame()
+        result_df["depth"] = np.linspace(0, 50, 100)
+        result_df["class1"] = np.linspace(0, 50, 100)
+        result_df["class2"] = np.linspace(0, 50, 100)
+        result_df["class3"] = np.linspace(0, 50, 100)
+
+        padrow = st.columns(3)
+        with padrow[0]:
+            st.empty()
+        with padrow[1]:
+            st.download_button(
+                label = "Download data as CSV",
+                data = result_df.to_csv().encode('utf-8'),
+                file_name = "digitized_data.csv",
+                mime = 'text/csv',
             )
-            
-            # Add a button to save the line positions as a CSV file
-            padsave = st.columns(3)
-            with padsave[0]:
-                st.empty()
-            with padsave[1]:
-                if st.button('Save line positions'):
-                    df = pd.DataFrame({
-                        'h_line_min_y': [h_line_min_y],
-                        'h_line_max_y': [h_line_max_y],
-                        'v_line_min_x': [v_line_min_x],
-                        'v_line_max_x': [v_line_max_x],
-                        'image_width': [image.size[0]] if bg_image else [None],
-                        'image_height': [image.size[1]] if bg_image else [None],
-                        'body_width': [width],
-                        'body_height': [height]
-                    })
-                    df.to_csv('line_positions.csv', index=False)
-                st.success('Line positions and image dimensions saved as CSV file')
-            with padsave[2]:
-                st.empty()
-
-            # Save the uploaded image as prediction_target.jpg
-            if bg_image is not None:
-                image = Image.open(bg_image)
-                image.save('prediction_target.jpg')
-            padreset = st.columns(3)
-            with padreset[0]:
-                st.empty()
-            with padreset[1]:
-                if st.button('Reset line positions'):
-                    df = pd.DataFrame({
-                        'h_line_min_y': [0],
-                        'h_line_max_y': [0],
-                        'v_line_min_x': [0],
-                        'v_line_max_x': [0],
-                        'image_width': [None],
-                        'image_height': [None],
-                        'body_width': [0],
-                        'body_height': [0]
-                    })
-
-                    df.to_csv('line_positions.csv', index=False)
-                    st.success('Line positions and image dimensions reset to 0')
-                if st.button("Run Prediction"):
-                    prediction()
-            with padreset[2]:
-                st.empty()
-
-            # Delete the prediction_target.jpg file
-            if os.path.exists('prediction_target.jpg'):
-                os.remove('prediction_target.jpg')
-
-            
-        with columrow[1]:
-            st.markdown("<h3 style='text-align: center;'>Output</h3>", unsafe_allow_html=True)
-            # to make the button centered aligned
-            result_df = pd.DataFrame()
-            result_df["depth"] = np.linspace(0, 50, 100)
-            result_df["class1"] = np.linspace(0, 50, 100)
-            result_df["class2"] = np.linspace(0, 50, 100)
-            result_df["class3"] = np.linspace(0, 50, 100)
-
-            padrow = st.columns(3)
-            with padrow[0]:
-                st.empty()
-            with padrow[1]:
-                st.download_button(
-                    label = "Download data as CSV",
-                    data = result_df.to_csv().encode('utf-8'),
-                    file_name = "digitized_data.csv",
-                    mime = 'text/csv',
-                )
-            with padrow[2]:
-                st.empty()
-            
-            st.markdown("<p style='text-align: center;'>Result-Preview</p>", unsafe_allow_html=True)
-            st.dataframe(result_df, width=500, height = 700)        
+        with padrow[2]:
+            st.empty()
+        
+        st.markdown("<p style='text-align: center;'>Result-Preview</p>", unsafe_allow_html=True)
+        st.dataframe(result_df, width=500, height = 700)        
     
 if __name__ == "__main__":
     main()
