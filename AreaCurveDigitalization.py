@@ -66,7 +66,7 @@ def main():
             bg_image = None
 
         if st.button('Scan the image'):
-            with st.spinner(key="document"):
+            with st.spinner():
                 inputdf = document_input(width, height, bg_image, image, h_line_min_position, h_line_max_position, v_line_min_position, v_line_max_position, depth_min, depth_max, precision, number_of_curve)
                 # Delete the prediction_target.jpg file
                 if os.path.exists('prediction_target.jpg'):
@@ -76,7 +76,7 @@ def main():
                     image = Image.open(bg_image)
                     image.save('prediction_target.jpg')
                 st.success("Running the documentation process")
-            with st.spinner(key="spinner_model"):
+            with st.spinner():
                 scan(inputdf)
                 st.success("Running the documentation process")
 
