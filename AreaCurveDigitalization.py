@@ -57,7 +57,7 @@ def main():
         stroke_width=stroke_width,
         background_color=bg_color,
         display_toolbar = False,
-        background_image = image_red if bg_image else None,
+        background_image = image if bg_image else None,
         update_streamlit=realtime_update,
         drawing_mode='line',
         initial_drawing={
