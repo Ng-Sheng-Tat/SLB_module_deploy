@@ -10,7 +10,7 @@ def prediction():
 
 def main():
     st.set_page_config(layout='wide')
-
+    st.write("Testing")
     # Specify canvas parameters in application
     drawing_mode = 'line'
 
