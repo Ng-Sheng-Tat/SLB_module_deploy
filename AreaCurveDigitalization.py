@@ -163,8 +163,8 @@ def main():
                 ],
                 "background": bg_color,
             },
-            height = height_red if canvas_resized else None,
-            width = width_red if canvas_resized else None,
+            height = height if canvas_resized else None,
+            width = width if canvas_resized else None,
         )
         
     with output_:
