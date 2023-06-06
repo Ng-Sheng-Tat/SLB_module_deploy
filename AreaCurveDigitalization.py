@@ -6,13 +6,17 @@ import os
 
 # Specify canvas parameters in application
 def main():
-    stroke_width = st.sidebar.slider("Stroke width: ", 1, 25, 2)
+    st.set_page_config(layout='wide')
+    with st.sidebar:
+        st.markdown("<h2 style='text-align: center;'> <strong>Input<strong> </h2>", unsafe_allow_html=True)
+        stroke_width = st.sidebar.slider("Stroke width: ", 1, 25, 2)
+        bg_image = st.sidebar.file_uploader("Background image:", type=["png", "jpg"])
+   
     h_line_color_1 = "blue"
     h_line_color_2 = "green"
     v_line_color_1 = "red"
     v_line_color_2 = "black"
     bg_color = "#eee"
-    bg_image = st.sidebar.file_uploader("Background image:", type=["png", "jpg"])
     realtime_update = True
     accuracy = 1
     width = 800
