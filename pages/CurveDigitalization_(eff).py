@@ -72,7 +72,7 @@ def main():
     st.set_page_config(layout="wide",page_title="Curve Digitalization",page_icon="📈",)
     st.session_state
     st.markdown("<h1 style='text-align: center;'>Line Curve Digitalization</h1>", unsafe_allow_html=True)
-
+    st.write("Vs code is here")
     desc, input_, output_ = st.tabs(["Description", "Input", "Output"])
     css = """
         <style>
