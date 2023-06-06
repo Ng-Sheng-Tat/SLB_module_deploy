@@ -73,6 +73,20 @@ def main():
         control_columns[2].markdown("<p style='text-align: center;'> Curve No. </p>", unsafe_allow_html=True)
         control_columns[3].number_input("Number-of-Curves: ", min_value=0, step = 1, label_visibility = "collapsed", key = 'number_of_curve') # st.session_state["number_of_curve"]
 
+        if st.button('Save line positions'):
+            df = pd.DataFrame({
+                'h_line_min_y': [h_line_min_y],
+                'h_line_max_y': [h_line_max_y],
+                'v_line_min_x': [v_line_min_x],
+                'v_line_max_x': [v_line_max_x],
+                'image_width': [image.size[0]] if bg_image else [None],
+                'image_height': [image.size[1]] if bg_image else [None],
+                'body_width': [width],
+                'body_height': [height]
+                })
+            df.to_csv('line_positions.csv', index=False)
+            st.success('Line positions and image dimensions saved as CSV file')
+
     desc, input_, output_ = st.tabs(["Description", "Input", "Output"])
     with desc:
         st.markdown("<h2 style='text-align: center;'>Functionality Description 📜</h2>", unsafe_allow_html=True)
@@ -182,26 +196,6 @@ def main():
             width=width if canvas_resized else None,
         )
         
-        # Add a button to save the line positions as a CSV file
-        padsave = st.columns(3)
-        with padsave[0]:
-            st.empty()
-        with padsave[1]:
-            if st.button('Save line positions'):
-                df = pd.DataFrame({
-                    'h_line_min_y': [h_line_min_y],
-                    'h_line_max_y': [h_line_max_y],
-                    'v_line_min_x': [v_line_min_x],
-                    'v_line_max_x': [v_line_max_x],
-                    'image_width': [image.size[0]] if bg_image else [None],
-                    'image_height': [image.size[1]] if bg_image else [None],
-                    'body_width': [width],
-                    'body_height': [height]
-                })
-                df.to_csv('line_positions.csv', index=False)
-            st.success('Line positions and image dimensions saved as CSV file')
-        with padsave[2]:
-            st.empty()
 
         # Save the uploaded image as prediction_target.jpg
         if bg_image is not None:
