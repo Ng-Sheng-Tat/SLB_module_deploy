@@ -73,6 +73,7 @@ def main():
     st.session_state
     st.markdown("<h1 style='text-align: center;'>Line Curve Digitalization</h1>", unsafe_allow_html=True)
     st.write("Vs code is here")
+    st.write("I have made some changes can you capture it")
     desc, input_, output_ = st.tabs(["Description", "Input", "Output"])
     css = """
         <style>
