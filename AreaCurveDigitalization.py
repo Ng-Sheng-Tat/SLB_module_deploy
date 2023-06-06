@@ -41,16 +41,16 @@ def main():
     
         # Add sliders to control the positions of the horizontal and vertical lines
         st.markdown("<b><span style='color:green'>Y-min (%):</span></b>", unsafe_allow_html=True)
-        ymin = st.slider("", 0, 100, 25,accuracy)
+        ymin = st.slider("", 0, 100, 25,accuracy, key = "ymin")
 
         st.markdown("<b><span style='color:blue'>Y-max (%):</span></b>", unsafe_allow_html=True)
-        ymax = st.slider("", 0, 100, 75,accuracy)
+        ymax = st.slider("", 0, 100, 75,accuracy, key = "ymax")
 
         st.markdown("<b><span style='color:red'>X-min (%):</span></b>", unsafe_allow_html=True)
-        xmin = st.slider("", 0, 100, 25,accuracy)
+        xmin = st.slider("", 0, 100, 25,accuracy, key = "xmin")
 
         st.markdown("<b><span style='color:black'>X-max (%):</span></b>", unsafe_allow_html=True)
-        xmax = st.slider("", 0, 100, 75,accuracy)
+        xmax = st.slider("", 0, 100, 75,accuracy, key = "xmax")
 
         x_sidebar_columns = st.columns([1,2.5,0.5,2.5])
         x_sidebar_columns[0].markdown("<p style='text-align: center;'> Depth: </p>", unsafe_allow_html=True)
