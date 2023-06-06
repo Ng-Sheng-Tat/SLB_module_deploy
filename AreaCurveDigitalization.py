@@ -200,24 +200,24 @@ def main():
             width=width if canvas_resized else None,
         )
         
-        with output_:
-            # with columrow[1]:
-            st.markdown("<h3 style='text-align: center;'>Output</h3>", unsafe_allow_html=True)
-            # to make the button centered aligned
+    with output_:
+        # with columrow[1]:
+        st.markdown("<h3 style='text-align: center;'>Output</h3>", unsafe_allow_html=True)
+        # to make the button centered aligned
 
-            # padrow = st.columns(3)
+        # padrow = st.columns(3)
 
-            # st.download_button(
-            #     label = "Download data as CSV",
-            #     # data = result_df.to_csv().encode('utf-8'),
-            #     file_name = "digitized_data.csv",
-            #     mime = 'text/csv',
-            # )
-            # with padrow[2]:
-            #     st.empty()
-            
-            st.markdown("<p style='text-align: center;'>Result-Preview</p>", unsafe_allow_html=True)
-            # st.dataframe(result_df, width=500, height = 700)        
+        # st.download_button(
+        #     label = "Download data as CSV",
+        #     # data = result_df.to_csv().encode('utf-8'),
+        #     file_name = "digitized_data.csv",
+        #     mime = 'text/csv',
+        # )
+        # with padrow[2]:
+        #     st.empty()
+        
+        st.markdown("<p style='text-align: center;'>Result-Preview</p>", unsafe_allow_html=True)
+        # st.dataframe(result_df, width=500, height = 700)        
     
 if __name__ == "__main__":
     main()
