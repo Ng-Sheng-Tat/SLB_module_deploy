@@ -217,7 +217,7 @@ def main():
             #     st.empty()
             
             st.markdown("<p style='text-align: center;'>Result-Preview</p>", unsafe_allow_html=True)
-            st.dataframe(result_df, width=500, height = 700)        
+            # st.dataframe(result_df, width=500, height = 700)        
     
 if __name__ == "__main__":
     main()
