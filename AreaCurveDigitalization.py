@@ -41,31 +41,31 @@ def main():
     
         # Add sliders to control the positions of the horizontal and vertical lines
         st.markdown("<b><span style='color:green'>Y-min (%):</span></b>", unsafe_allow_html=True)
-        ymin = st.slider("", 0, 100, 25,accuracy, key = "ymin")
+        st.slider("", 0, 100, 25,accuracy, key = "ymin")
 
         st.markdown("<b><span style='color:blue'>Y-max (%):</span></b>", unsafe_allow_html=True)
-        ymax = st.slider("", 0, 100, 75,accuracy, key = "ymax")
+        st.slider("", 0, 100, 75,accuracy, key = "ymax")
 
         st.markdown("<b><span style='color:red'>X-min (%):</span></b>", unsafe_allow_html=True)
-        xmin = st.slider("", 0, 100, 25,accuracy, key = "xmin")
+        st.slider("", 0, 100, 25,accuracy, key = "xmin")
 
         st.markdown("<b><span style='color:black'>X-max (%):</span></b>", unsafe_allow_html=True)
-        xmax = st.slider("", 0, 100, 75,accuracy, key = "xmax")
+        st.slider("", 0, 100, 75,accuracy, key = "xmax")
 
         x_sidebar_columns = st.columns([1,2.5,0.5,2.5])
         x_sidebar_columns[0].markdown("<p style='text-align: center;'> Depth: </p>", unsafe_allow_html=True)
-        depth_min = x_sidebar_columns[1].number_input("x-min", min_value=0, value=0, step=1, label_visibility = "collapsed") 
+        x_sidebar_columns[1].number_input("x-min", min_value=0, value=0, step=1, label_visibility = "collapsed", key = "depth_min") 
         x_sidebar_columns[2].markdown("<p style='text-align: center;'> ~ </p>", unsafe_allow_html=True)
-        depth_max = x_sidebar_columns[3].number_input("x-max", min_value = 0, value = 30, step = 1, label_visibility = "collapsed") 
+        x_sidebar_columns[3].number_input("x-max", min_value = 0, value = 30, step = 1, label_visibility = "collapsed", key = "depth_max") 
         control_columns = st.columns([1,1.8,1,1.3])
         control_columns[0].markdown("<p style='text-align: center;'> Precision: </p>", unsafe_allow_html=True)
-        precision = control_columns[1].number_input("Precision: ", min_value = 0, step = 1, label_visibility = "collapsed") 
+        control_columns[1].number_input("Precision: ", min_value = 0, key = "precision", step = 1, label_visibility = "collapsed") 
         control_columns[2].markdown("<p style='text-align: center;'> Curve No. </p>", unsafe_allow_html=True)
-        number_of_curve = control_columns[3].number_input("Number-of-Curves: ", min_value=0, step = 1, label_visibility = "collapsed") 
+        control_columns[3].number_input("Number-of-Curves: ", key = "number_of_curve", min_value=0, step = 1, label_visibility = "collapsed") 
 
         if st.button('Reset line positions'):
-            xmax, ymax = 75
-            xmin, ymin = 75
+            st.session_state['ymin'], st.session_state['xmin'] = 25
+            st.session_state['ymax'], st.session_state['xmax'] = 75
             bg_image = None
 
         if st.button('Scan the image'):
