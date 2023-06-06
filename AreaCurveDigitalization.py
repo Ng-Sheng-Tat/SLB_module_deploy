@@ -64,16 +64,6 @@ def main():
             st.session_state['ymin'], st.session_state['xmin'] = 25
             st.session_state['ymax'], st.session_state['xmax'] = 75
             bg_image = None
-        if bg_image is not None:
-            image = Image.open(bg_image)
-            width, height = image.size
-            max_length= 600
-        if height > max_length:
-            ratio = max_length / float(height)
-            width = int(ratio * width)
-            height = max_length
-            image = image.resize((width, height), Image.ANTIALIAS)
-            canvas_resized = True
 
         # Calculate the y-coordinates of the horizontal lines and the x-coordinates of the vertical lines based on the slider values
         h_line_min_y = int(height * h_line_min_position / 100)
@@ -95,6 +85,16 @@ def main():
                 scan(inputdf)
                 st.success("Running the documentation process")
 
+        if bg_image is not None:
+            image = Image.open(bg_image)
+            width, height = image.size
+            max_length= 600
+        if height > max_length:
+            ratio = max_length / float(height)
+            width = int(ratio * width)
+            height = max_length
+            image = image.resize((width, height), Image.ANTIALIAS)
+            canvas_resized = True
 
     desc, input_, output_ = st.tabs(["Description", "Input", "Output"])
     with desc:
