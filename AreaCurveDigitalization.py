@@ -85,16 +85,16 @@ def main():
                 scan(inputdf)
                 st.success("Running the documentation process")
 
-        if bg_image is not None:
-            image = Image.open(bg_image)
-            width, height = image.size
-            max_length= 600
-        if height > max_length:
-            ratio = max_length / float(height)
-            width = int(ratio * width)
-            height = max_length
-            image = image.resize((width, height), Image.ANTIALIAS)
-            canvas_resized = True
+    if bg_image is not None:
+        image = Image.open(bg_image)
+        width, height = image.size
+        max_length= 600
+    if height > max_length:
+        ratio = max_length / float(height)
+        width = int(ratio * width)
+        height = max_length
+        image = image.resize((width, height), Image.ANTIALIAS)
+        canvas_resized = True
 
     desc, input_, output_ = st.tabs(["Description", "Input", "Output"])
     with desc:
