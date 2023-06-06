@@ -82,7 +82,7 @@ def main():
         v_line_max_x = int(width * v_line_max_position / 100)
         if st.button('Scan the image'):
             with st.spinner():
-                inputdf = document_input(width, height, bg_image, image, h_line_min_position, h_line_max_position, v_line_min_position, v_line_max_position, depth_min, depth_max, precision, number_of_curve)
+                inputdf = document_input(width, height, h_line_min_position, h_line_max_position, v_line_min_position, v_line_max_position, depth_min, depth_max, precision, number_of_curve)
                 # Delete the prediction_target.jpg file
                 if os.path.exists('prediction_target.jpg'):
                     os.remove('prediction_target.jpg')
