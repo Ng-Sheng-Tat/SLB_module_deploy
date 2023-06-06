@@ -11,7 +11,16 @@ def main():
         st.markdown("<h2 style='text-align: center;'> <strong>Input<strong> </h2>", unsafe_allow_html=True)
         stroke_width = st.sidebar.slider("Stroke width: ", 1, 25, 2)
         bg_image = st.sidebar.file_uploader("Background image:", type=["png", "jpg"])
-   
+        st.markdown("<b><span style='color:green'>Y-min (%):</span></b>", unsafe_allow_html=True)
+        st.slider("", 0, 100, 25,accuracy, key = "ymin")
+        st.markdown("<b><span style='color:blue'>Y-max (%):</span></b>", unsafe_allow_html=True)
+        st.slider("", 0, 100, 75,accuracy, key = "ymax")
+        st.markdown("<b><span style='color:red'>X-min (%):</span></b>", unsafe_allow_html=True)
+        st.slider("", 0, 100, 25,accuracy, key = "xmin")
+        st.markdown("<b><span style='color:black'>X-max (%):</span></b>", unsafe_allow_html=True)
+        st.slider("", 0, 100, 75,accuracy, key = "xmax")
+
+
     h_line_color_1 = "blue"
     h_line_color_2 = "green"
     v_line_color_1 = "red"
@@ -21,7 +30,6 @@ def main():
     accuracy = 1
     width = 800
     height = 800
-
     canvas_resized = False
 
     if bg_image is not None:
