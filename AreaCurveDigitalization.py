@@ -7,6 +7,16 @@ import os
 # Specify canvas parameters in application
 def main():
     st.set_page_config(layout='wide')
+    h_line_color_1 = "blue"
+    h_line_color_2 = "green"
+    v_line_color_1 = "red"
+    v_line_color_2 = "black"
+    bg_color = "#eee"
+    realtime_update = True
+    accuracy = 1
+    width = 800
+    height = 800
+    canvas_resized = False
     with st.sidebar:
         st.markdown("<h2 style='text-align: center;'> <strong>Input<strong> </h2>", unsafe_allow_html=True)
         stroke_width = st.sidebar.slider("Stroke width: ", 1, 25, 2)
@@ -19,18 +29,6 @@ def main():
         st.slider("", 0, 100, 25,accuracy, key = "xmin")
         st.markdown("<b><span style='color:black'>X-max (%):</span></b>", unsafe_allow_html=True)
         st.slider("", 0, 100, 75,accuracy, key = "xmax")
-
-
-    h_line_color_1 = "blue"
-    h_line_color_2 = "green"
-    v_line_color_1 = "red"
-    v_line_color_2 = "black"
-    bg_color = "#eee"
-    realtime_update = True
-    accuracy = 1
-    width = 800
-    height = 800
-    canvas_resized = False
 
     if bg_image is not None:
         image = Image.open(bg_image)
