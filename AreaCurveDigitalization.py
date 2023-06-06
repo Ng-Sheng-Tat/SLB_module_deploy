@@ -81,6 +81,12 @@ def main():
             if bg_image is not None:
                 image = Image.open(bg_image)
                 image.save('prediction_target.jpg')
+        # Calculate the y-coordinates of the horizontal lines and the x-coordinates of the vertical lines based on the slider values
+        h_line_min_y = int(height * st.session_state["ymin"] / 100)
+        h_line_max_y = int(height * st.session_state["ymax"] / 100)
+        v_line_min_x = int(width * st.session_state["xmax"] / 100)
+        v_line_max_x = int(width * st.session_state["xmin"] / 100)
+
         if bg_image is not None:
             image = Image.open(bg_image)
             width, height = image.size
@@ -90,12 +96,6 @@ def main():
                 width_red = int(ratio * width)
                 image_red = image.resize((width, height), Image.ANTIALIAS)
                 canvas_resized = True
-                
-        # Calculate the y-coordinates of the horizontal lines and the x-coordinates of the vertical lines based on the slider values
-        h_line_min_y = int(height * st.session_state["ymin"] / 100)
-        h_line_max_y = int(height * st.session_state["ymax"] / 100)
-        v_line_min_x = int(width * st.session_state["xmax"] / 100)
-        v_line_max_x = int(width * st.session_state["xmin"] / 100)
 
     desc, input_, output_ = st.tabs(["Description", "Input", "Output"])
     with desc:
@@ -196,8 +196,8 @@ def main():
                 ],
                 "background": bg_color,
             },
-            height=height if canvas_resized else None,
-            width=width if canvas_resized else None,
+            height = height_red if canvas_resized else None,
+            width = width_red if canvas_resized else None,
         )
         
     with output_:
