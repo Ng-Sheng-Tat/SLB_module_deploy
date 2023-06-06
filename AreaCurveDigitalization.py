@@ -14,7 +14,7 @@ def main():
     bg_color = "#eee"
     realtime_update = True
     accuracy = 1
-    # width = 800
+    width = 800
     height = 800
     canvas_resized = False
     with st.sidebar:
