@@ -37,11 +37,12 @@ def main():
     if bg_image is not None:
         image = Image.open(bg_image)
         width, height = image.size
-        height_red = 800
-        if height > height_red:
-            ratio = height_red / float(height)
-            width_red = int(ratio * width)
-            image_red = image.resize((width, height), Image.ANTIALIAS)
+        max_length= 600
+        if height > max_length:
+            ratio = max_length / float(height)
+            width = int(ratio * width)
+            height = max_length
+            image = image.resize((width, height), Image.ANTIALIAS)
             canvas_resized = True
 
     # Calculate the y-coordinates of the horizontal lines and the x-coordinates of the vertical lines based on the slider values
@@ -67,15 +68,15 @@ def main():
                     "version": "4.4.0",
                     "originX": "center",
                     "originY": "center",
-                    "left": width_red / 2,
+                    "left": width / 2,
                     "top": h_line_min_y,
-                    "width": width_red,
+                    "width": width,
                     "height": 0,
                     "fill": h_line_color_2,
                     "stroke": h_line_color_2,
                     "strokeWidth": stroke_width,
-                    "x1": -width_red / 2,
-                    "x2": width_red / 2,
+                    "x1": -width / 2,
+                    "x2": width / 2,
                     "y1": 0,
                     "y2": 0,
                 },
@@ -84,15 +85,15 @@ def main():
                     "version": "4.4.0",
                     "originX": "center",
                     "originY": "center",
-                    "left": width_red / 2,
+                    "left": width / 2,
                     "top": h_line_max_y,
-                    "width": width_red,
+                    "width": width,
                     "height": 0,
                     "fill": h_line_color_1,
                     "stroke": h_line_color_1,
                     "strokeWidth": stroke_width,
-                    "x1": -width_red / 2,
-                    "x2": width_red / 2,
+                    "x1": -width / 2,
+                    "x2": width / 2,
                     "y1": 0,
                     "y2": 0,
                 },
@@ -102,16 +103,16 @@ def main():
                     "originX": "center",
                                     "originY": "center",
                     "left": v_line_min_x,
-                    "top": height_red / 2,
+                    "top": height / 2,
                     "width": 0,
-                    "height": height_red,
+                    "height": height,
                     "fill": v_line_color_1,
                     "stroke": v_line_color_1,
                     "strokeWidth": stroke_width,
                     "x1": 0,
                     "x2": 0,
-                    "y1": -height_red / 2,
-                    "y2": height_red / 2,
+                    "y1": -height / 2,
+                    "y2": height / 2,
                 },
                 {
                     "type": "line",
@@ -119,22 +120,22 @@ def main():
                     "originX": "center",
                     "originY": "center",
                     "left": v_line_max_x,
-                    "top": height_red / 2,
+                    "top": height / 2,
                     "width": 0,
-                    "height": height_red,
+                    "height": height,
                     "fill": v_line_color_2,
                     "stroke": v_line_color_2,
                     "strokeWidth": stroke_width,
                     "x1": 0,
                     "x2": 0,
-                    "y1": -height_red / 2,
-                    "y2": height_red / 2,
+                    "y1": -height / 2,
+                    "y2": height / 2,
                 },
             ],
             "background": bg_color,
         },
         height=height if canvas_resized else None,
-        width=width_red if canvas_resized else None,
+        width=width if canvas_resized else None,
     )
 
 
