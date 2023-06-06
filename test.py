@@ -4,7 +4,7 @@ from PIL import Image
 from streamlit_image_coordinates import streamlit_image_coordinates
 image = Image.open("Image4.png")
 image = image.convert("RGB")
-value = streamlit_image_coordinates(image)
-value2 = streamlit_image_coordinates(image)
+value = streamlit_image_coordinates(image, key = "value")
+value2 = streamlit_image_coordinates(image, key = "value2")
 
 st.write(value)
