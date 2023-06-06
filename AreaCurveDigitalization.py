@@ -36,6 +36,17 @@ def main():
     width = 800
     height = 800
     canvas_resized = False
+    if bg_image is not None:
+        image = Image.open(bg_image)
+        width, height = image.size
+        max_length= 600
+        if height > max_length:
+            ratio = max_length / float(height)
+            width = int(ratio * width)
+            height = max_length
+            image = image.resize((width, height), Image.ANTIALIAS)
+            canvas_resized = True
+
     with st.sidebar:
         st.markdown("<h2 style='text-align: center;'> <strong>Input<strong> </h2>", unsafe_allow_html=True)
         stroke_width = st.sidebar.slider("Stroke width: ", 1, 25, 2)
@@ -61,8 +72,8 @@ def main():
         number_of_curve = control_columns[3].number_input("Number-of-Curves: ", key = "number_of_curve", min_value=0, step = 1, label_visibility = "collapsed") 
 
         if st.button('Reset line positions'):
-            st.session_state['ymin'], st.session_state['xmin'] = 25
-            st.session_state['ymax'], st.session_state['xmax'] = 75
+            h_line_min_position, v_line_min_position = 25
+            h_line_max_position, v_line_max_position = 75
             bg_image = None
 
         # Calculate the y-coordinates of the horizontal lines and the x-coordinates of the vertical lines based on the slider values
@@ -81,20 +92,10 @@ def main():
                     image = Image.open(bg_image)
                     image.save('prediction_target.jpg')
                 st.success("Running the documentation process")
+
             with st.spinner():
                 scan(inputdf)
-                st.success("Running the documentation process")
-
-    if bg_image is not None:
-        image = Image.open(bg_image)
-        width, height = image.size
-        max_length= 600
-        if height > max_length:
-            ratio = max_length / float(height)
-            width = int(ratio * width)
-            height = max_length
-            image = image.resize((width, height), Image.ANTIALIAS)
-            canvas_resized = True
+                st.success("Running the scanning the image")
 
     desc, input_, output_ = st.tabs(["Description", "Input", "Output"])
     with desc:
@@ -113,91 +114,91 @@ def main():
 
         # Create a canvas component
         st_canvas(
-            # Fixed fill color with some opacity
-            fill_color="rgba(255, 165, 0, 0.3)",  
-            stroke_width=stroke_width,
-            display_toolbar = False,
-            background_color=bg_color,
-            background_image=image if bg_image else None,
-            update_streamlit=True,
-            drawing_mode='line',
-            initial_drawing={
-                "version": "4.4.0",
-                "objects": [
-                    {
-                        "type": "line",
-                        "version": "4.4.0",
-                        "originX": "center",
-                        "originY": "center",
-                        "left": width / 2,
-                        "top": h_line_min_y,
-                        "width": width,
-                        "height": 0,
-                        "fill": h_line_color_2,
-                        "stroke": h_line_color_2,
-                        "strokeWidth": stroke_width,
-                        "x1": -width / 2,
-                        "x2": width / 2,
-                        "y1": 0,
-                        "y2": 0,
-                    },
-                    {
-                        "type": "line",
-                        "version": "4.4.0",
-                        "originX": "center",
-                        "originY": "center",
-                        "left": width / 2,
-                        "top": h_line_max_y,
-                        "width": width,
-                        "height": 0,
-                        "fill": h_line_color_1,
-                        "stroke": h_line_color_1,
-                        "strokeWidth": stroke_width,
-                        "x1": -width / 2,
-                        "x2": width / 2,
-                        "y1": 0,
-                        "y2": 0,
-                    },
-                    {
-                        "type": "line",
-                        "version": "4.4.0",
-                        "originX": "center",
-                                        "originY": "center",
-                        "left": v_line_min_x,
-                        "top": height / 2,
-                        "width": 0,
-                        "height": height,
-                        "fill": v_line_color_1,
-                        "stroke": v_line_color_1,
-                        "strokeWidth": stroke_width,
-                        "x1": 0,
-                        "x2": 0,
-                        "y1": -height / 2,
-                        "y2": height / 2,
-                    },
-                    {
-                        "type": "line",
-                        "version": "4.4.0",
-                        "originX": "center",
-                        "originY": "center",
-                        "left": v_line_max_x,
-                        "top": height / 2,
-                        "width": 0,
-                        "height": height,
-                        "fill": v_line_color_2,
-                        "stroke": v_line_color_2,
-                        "strokeWidth": stroke_width,
-                        "x1": 0,
-                        "x2": 0,
-                        "y1": -height / 2,
-                        "y2": height / 2,
-                    },
-                ],
-                "background": bg_color,
-            },
-            height = height if canvas_resized else None,
-            width = width if canvas_resized else None,
-        )
+        fill_color="rgba(255, 165, 0, 0.3)",  # Fixed fill color with some opacity
+        stroke_width=stroke_width,
+        background_color=bg_color,
+        background_image=image if bg_image else None,
+        update_streamlit=True,
+        drawing_mode='line',
+        initial_drawing={
+            "version": "4.4.0",
+            "objects": [
+                {
+                    "type": "line",
+                    "version": "4.4.0",
+                    "originX": "center",
+                    "originY": "center",
+                    "left": width / 2,
+                    "top": h_line_min_y,
+                    "width": width,
+                    "height": 0,
+                    "fill": h_line_color_2,
+                    "stroke": h_line_color_2,
+                    "strokeWidth": stroke_width,
+                    "x1": -width / 2,
+                    "x2": width / 2,
+                    "y1": 0,
+                    "y2": 0,
+                },
+                {
+                    "type": "line",
+                    "version": "4.4.0",
+                    "originX": "center",
+                    "originY": "center",
+                    "left": width / 2,
+                    "top": h_line_max_y,
+                    "width": width,
+                    "height": 0,
+                    "fill": h_line_color_1,
+                    "stroke": h_line_color_1,
+                    "strokeWidth": stroke_width,
+                    "x1": -width / 2,
+                    "x2": width / 2,
+                    "y1": 0,
+                    "y2": 0,
+                },
+                {
+                    "type": "line",
+                    "version": "4.4.0",
+                    "originX": "center",
+                                    "originY": "center",
+                    "left": v_line_min_x,
+                    "top": height / 2,
+                    "width": 0,
+                    "height": height,
+                    "fill": v_line_color_1,
+                    "stroke": v_line_color_1,
+                    "strokeWidth": stroke_width,
+                    "x1": 0,
+                    "x2": 0,
+                    "y1": -height / 2,
+                    "y2": height / 2,
+                },
+                {
+                    "type": "line",
+                    "version": "4.4.0",
+                    "originX": "center",
+                    "originY": "center",
+                    "left": v_line_max_x,
+                    "top": height / 2,
+                    "width": 0,
+                    "height": height,
+                    "fill": v_line_color_2,
+                    "stroke": v_line_color_2,
+                    "strokeWidth": stroke_width,
+                    "x1": 0,
+                    "x2": 0,
+                    "y1": -height / 2,
+                    "y2": height / 2,
+                },
+            ],
+            "background": bg_color,
+        },
+        height=height if canvas_resized else None,
+        width=width if canvas_resized else None,
+    )
+
+
         
     with output_:
         # with columrow[1]:
