@@ -35,7 +35,7 @@ def main():
                 height = max_length
                 image = image.resize((width, height), Image.ANTIALIAS)
                 canvas_resized = True
-
+    
         # Add sliders to control the positions of the horizontal and vertical lines
         st.markdown("<b><span style='color:green'>Y-min (%):</span></b>", unsafe_allow_html=True)
         st.slider("", 0, 100, 75,accuracy,key="ymin")
@@ -73,7 +73,7 @@ def main():
         control_columns[2].markdown("<p style='text-align: center;'> Curve No. </p>", unsafe_allow_html=True)
         control_columns[3].number_input("Number-of-Curves: ", min_value=0, step = 1, label_visibility = "collapsed", key = 'number_of_curve') # st.session_state["number_of_curve"]
 
-    desc, apps_ = st.tabs(["Description", "Application"])
+    desc, input_, output_ = st.tabs(["Description", "Input", "Output"])
     with desc:
         st.markdown("<h2 style='text-align: center;'>Functionality Description 📜</h2>", unsafe_allow_html=True)
         st.markdown("""<h4 style='text-align: justify;'>The algorithm works U-net images fragmentation to segmentize the digital curve by identifying the potential separating lines beteen different regions. 
@@ -85,11 +85,9 @@ def main():
         </ul>
         """, unsafe_allow_html=True)
 
-    with apps_:
-        # columrow = st.columns([1, 1])
-        # with columrow[0]:
+    with input_:
         st.markdown("<h3 style='text-align: center;'>Input</h3>", unsafe_allow_html=True)
-        
+
         # Calculate the y-coordinates of the horizontal lines and the x-coordinates of the vertical lines based on the slider values
         h_line_min_y = int(height * st.session_state["ymin"] / 100)
         h_line_max_y = int(height * st.session_state["ymax"] / 100)
@@ -97,7 +95,7 @@ def main():
         v_line_max_x = int(width * st.session_state["xmin"] / 100)
 
         # Create a canvas component
-        canvas_result = st_canvas(
+        st_canvas(
             fill_color="rgba(255, 165, 0, 0.3)",  # Fixed fill color with some opacity
             stroke_width=stroke_width,
             background_color=bg_color,
