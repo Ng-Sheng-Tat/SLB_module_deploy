@@ -32,8 +32,21 @@ def main():
         v_line_min_position = st.sidebar.slider("", 0, 100, 25,accuracy,key="xmax")
 
         st.sidebar.markdown("<b><span style='color:black'>X-max (%):</span></b>", unsafe_allow_html=True)
+        
         v_line_max_position = st.sidebar.slider("", 0, 100, 75,accuracy,key="xmin")
-    
+        x_sidebar_columns = st.columns([1,2.5,0.5,2.5])
+        x_sidebar_columns[0].markdown("<p style='text-align: center;'> Depth: </p>", unsafe_allow_html=True)
+        x_sidebar_columns[1].number_input("x-min", min_value=0, value=0, step=1, label_visibility = "collapsed", key = "depth_min") 
+        x_sidebar_columns[2].markdown("<p style='text-align: center;'> ~ </p>", unsafe_allow_html=True)
+        x_sidebar_columns[3].number_input("x-max", min_value = 0, value = 30, step = 1, label_visibility = "collapsed", key = "depth_max") 
+        control_columns = st.columns([1,1.8,1,1.3])
+        control_columns[0].markdown("<p style='text-align: center;'> Precision: </p>", unsafe_allow_html=True)
+        control_columns[1].number_input("Precision: ", min_value = 0, key = "precision", step = 1, label_visibility = "collapsed") 
+        control_columns[2].markdown("<p style='text-align: center;'> Curve No. </p>", unsafe_allow_html=True)
+        control_columns[3].number_input("Number-of-Curves: ", key = "number_of_curve", min_value=0, step = 1, label_visibility = "collapsed") 
+
+
+
     if bg_image is not None:
         image = Image.open(bg_image)
         width, height = image.size
