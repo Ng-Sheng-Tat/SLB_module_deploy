@@ -10,26 +10,37 @@ def prediction():
 
 def main():
     st.set_page_config(layout='wide')
-    st.write("Testing")
     # Specify canvas parameters in application
-    drawing_mode = 'line'
-
     h_line_color_1 = "blue"
     h_line_color_2 = "green"
     v_line_color_1 = "red"
     v_line_color_2 = "black"
     bg_color = "#eee"
-    realtime_update = True
     accuracy = 1
     width = 800
     height = 800
-
     canvas_resized = False
 
+    # Calculate the y-coordinates of the horizontal lines and the x-coordinates of the vertical lines based on the slider values
+    h_line_min_y = int(height * st.session_state["ymin"] / 100)
+    h_line_max_y = int(height * st.session_state["ymax"] / 100)
+    v_line_min_x = int(width * st.session_state["xmax"] / 100)
+    v_line_max_x = int(width * st.session_state["xmin"] / 100)
+    
     with st.sidebar:
         st.markdown("<h2 style='text-align: center;'> <strong>Input<strong> </h2>", unsafe_allow_html=True)
         stroke_width = st.sidebar.slider("Stroke width: ", 1, 25, 2)
         bg_image = st.sidebar.file_uploader("Background image:", type=["png", "jpg", "jpeg"])
+        if bg_image is not None:
+            image = Image.open(bg_image)
+            width, height = image.size
+            max_length = 800
+            if height > max_length:
+                ratio = max_length / float(height)
+                width = int(ratio * width)
+                height = max_length
+                image = image.resize((width, height), Image.ANTIALIAS)
+                canvas_resized = True
 
         # Add sliders to control the positions of the horizontal and vertical lines
         st.markdown("<b><span style='color:green'>Y-min (%):</span></b>", unsafe_allow_html=True)
@@ -68,23 +79,6 @@ def main():
         control_columns[2].markdown("<p style='text-align: center;'> Curve No. </p>", unsafe_allow_html=True)
         control_columns[3].number_input("Number-of-Curves: ", min_value=0, step = 1, label_visibility = "collapsed", key = 'number_of_curve') # st.session_state["number_of_curve"]
 
-    # Calculate the y-coordinates of the horizontal lines and the x-coordinates of the vertical lines based on the slider values
-    h_line_min_y = int(height * st.session_state["ymin"] / 100)
-    h_line_max_y = int(height * st.session_state["ymax"] / 100)
-    v_line_min_x = int(width * st.session_state["xmax"] / 100)
-    v_line_max_x = int(width * st.session_state["xmin"] / 100)
-    if bg_image is not None:
-        image = Image.open(bg_image)
-        width, height = image.size
-        max_length = 800
-        if height > max_length:
-            ratio = max_length / float(height)
-            width = int(ratio * width)
-            height = max_length
-            image = image.resize((width, height), Image.ANTIALIAS)
-            canvas_resized = True
-
-    # Create a canvas component
     desc, apps_ = st.tabs(["Description", "Application"])
     with desc:
         st.markdown("<h2 style='text-align: center;'>Functionality Description 📜</h2>", unsafe_allow_html=True)
@@ -96,18 +90,20 @@ def main():
         <li style="font-size: 20px;"><strong>Output<strong>: % of each area at depth</li>
         </ul>
         """, unsafe_allow_html=True)
-        
+
     with apps_:
         columrow = st.columns([1, 1])
         with columrow[0]:
             st.markdown("<h3 style='text-align: center;'>Input</h3>", unsafe_allow_html=True)
+            
+            # Create a canvas component
             canvas_result = st_canvas(
                 fill_color="rgba(255, 165, 0, 0.3)",  # Fixed fill color with some opacity
                 stroke_width=stroke_width,
                 background_color=bg_color,
                 background_image=image if bg_image else None,
-                update_streamlit=realtime_update,
-                drawing_mode=drawing_mode,
+                update_streamlit=True,
+                drawing_mode='line',
                 initial_drawing={
                     "version": "4.4.0",
                     "objects": [
@@ -262,6 +258,7 @@ def main():
                 st.empty()
             
             st.markdown("<p style='text-align: center;'>Result-Preview</p>", unsafe_allow_html=True)
-            st.dataframe(result_df, width=500, height = 700)
+            st.dataframe(result_df, width=500, height = 700)        
+    
 if __name__ == "__main__":
     main()
