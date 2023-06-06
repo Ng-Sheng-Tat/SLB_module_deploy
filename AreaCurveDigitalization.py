@@ -36,21 +36,22 @@ def main():
     width = 800
     height = 800
     canvas_resized = False
-    if bg_image is not None:
-        image = Image.open(bg_image)
-        width, height = image.size
-        max_length= 600
-        if height > max_length:
-            ratio = max_length / float(height)
-            width = int(ratio * width)
-            height = max_length
-            image = image.resize((width, height), Image.ANTIALIAS)
-            canvas_resized = True
+    
 
     with st.sidebar:
         st.markdown("<h2 style='text-align: center;'> <strong>Input<strong> </h2>", unsafe_allow_html=True)
         stroke_width = st.sidebar.slider("Stroke width: ", 1, 25, 2)
         bg_image = st.sidebar.file_uploader("Background image:", type=["png", "jpg"])
+        if bg_image is not None:
+            image = Image.open(bg_image)
+            width, height = image.size
+            max_length= 600
+            if height > max_length:
+                ratio = max_length / float(height)
+                width = int(ratio * width)
+                height = max_length
+                image = image.resize((width, height), Image.ANTIALIAS)
+                canvas_resized = True
         # Add sliders to control the positions of the horizontal and vertical lines
         st.sidebar.markdown("<b><span style='color:green'>Y-min (%):</span></b>", unsafe_allow_html=True)
         h_line_min_position = st.sidebar.slider("", 0, 100, 75,accuracy,key="ymin")
