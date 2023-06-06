@@ -96,8 +96,10 @@ def main():
 
         # Create a canvas component
         st_canvas(
-            fill_color="rgba(255, 165, 0, 0.3)",  # Fixed fill color with some opacity
+            # Fixed fill color with some opacity
+            fill_color="rgba(255, 165, 0, 0.3)",  
             stroke_width=stroke_width,
+            display_toolbar = False,
             background_color=bg_color,
             background_image=image if bg_image else None,
             update_streamlit=True,
