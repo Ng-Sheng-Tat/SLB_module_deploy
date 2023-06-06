@@ -6,6 +6,10 @@ import os
 import numpy as np
 
 def prediction():
+    st.success("Doing some prediction")
+    result_df = pd.DataFrame()
+    result_df["depth"] = np.linspace(0, 50, 100)
+    result_df["class1"] = np.linspace(0, 50, 100)
     pass
 
 def main():
@@ -28,52 +32,43 @@ def main():
         if bg_image is not None:
             image = Image.open(bg_image)
             width, height = image.size
-            max_length = 800
-            if height > max_length:
-                ratio = max_length / float(height)
-                width = int(ratio * width)
-                height = max_length
-                image = image.resize((width, height), Image.ANTIALIAS)
+            height_red = 800
+            if height > height_red:
+                ratio = height_red / float(height)
+                width_red = int(ratio * width)
+                image_red = image.resize((width, height), Image.ANTIALIAS)
                 canvas_resized = True
     
         # Add sliders to control the positions of the horizontal and vertical lines
         st.markdown("<b><span style='color:green'>Y-min (%):</span></b>", unsafe_allow_html=True)
-        st.slider("", 0, 100, 75,accuracy,key="ymin")
-
-        # Original Code: h_line_min_position = st.sidebar.slider("", 0, 100, 75,accuracy,key="ymin")
-        # now you can achieve the state session using st.session_state["ymin"], this bulky syntax is equivalent to h_line_min_position
+        ymin = st.slider("", 0, 100, 25,accuracy)
 
         st.markdown("<b><span style='color:blue'>Y-max (%):</span></b>", unsafe_allow_html=True)
-        st.slider("", 0, 100, 25,accuracy,key="ymax")
+        ymax = st.slider("", 0, 100, 75,accuracy)
 
         st.markdown("<b><span style='color:red'>X-min (%):</span></b>", unsafe_allow_html=True)
-        st.slider("", 0, 100, 25,accuracy,key="xmax")
+        xmin = st.slider("", 0, 100, 25,accuracy)
 
         st.markdown("<b><span style='color:black'>X-max (%):</span></b>", unsafe_allow_html=True)
-        st.slider("", 0, 100, 75,accuracy,key="xmin")
+        xmax = st.slider("", 0, 100, 75,accuracy)
 
-        x_sidebar_columns = st.columns([1,2.5,1,2.5])
-        x_sidebar_columns[0].markdown("<p style='text-align: center;'> x-min: </p>", unsafe_allow_html=True)
-        x_sidebar_columns[1].number_input("x-min", min_value=0, value=0, step=1, label_visibility = "collapsed", key = 'x_min') # access the variables through st.session_state["x_min"]
-        x_sidebar_columns[2].markdown("<p style='text-align: center;'> x-min: </p>", unsafe_allow_html=True)
-        x_sidebar_columns[3].number_input("x-max", min_value = st.session_state["x_min"], value = 30, step = 1, label_visibility = "collapsed", key = 'x_max') # st.session_state["x_max"]
-        ymin_sidebar_columns = st.columns([1,2.5,1,2.5])
-        ymin_sidebar_columns[0].markdown("<p style='text-align: center;'> y-min: </p>", unsafe_allow_html=True, )
-        ymin_sidebar_columns[1].number_input("y-min", min_value=0, value =1, step = 1, label_visibility = "collapsed", key = 'ymin1') # st.session_state["ymin1"]
-        ymin_sidebar_columns[2].markdown("<p style='text-align: center;'> x 10^ </p>", unsafe_allow_html=True)
-        ymin_sidebar_columns[3].number_input("y-min-pow", step = 1, label_visibility = "collapsed", key = 'ymin2') # st.session_state["ymin1"]
-        ymax_sidebar_columns = st.columns([1,2.5,1,2.5])
-        ymax_sidebar_columns[0].markdown("<p style='text-align: center;'> y-max: </p>", unsafe_allow_html=True) 
-        ymax_sidebar_columns[1].number_input("y-max", step = 1, min_value=0, value = 3, label_visibility = "collapsed", key = 'ymax1') # st.session_state["ymax1"]
-        ymax_sidebar_columns[2].markdown("<p style='text-align: center;'> x 10^ </p>", unsafe_allow_html=True)
-        ymax_sidebar_columns[3].number_input("y-max-pow", step = 1, label_visibility = "collapsed", key = 'ymax2') # st.session_state["ymax2"]
+        x_sidebar_columns = st.columns([1,2.5,0.5,2.5])
+        x_sidebar_columns[0].markdown("<p style='text-align: center;'> Depth: </p>", unsafe_allow_html=True)
+        depth_min = x_sidebar_columns[1].number_input("x-min", min_value=0, value=0, step=1, label_visibility = "collapsed") 
+        x_sidebar_columns[2].markdown("<p style='text-align: center;'> ~ </p>", unsafe_allow_html=True)
+        depth_max = x_sidebar_columns[3].number_input("x-max", min_value = 0, value = 30, step = 1, label_visibility = "collapsed") 
         control_columns = st.columns([1,1.8,1,1.3])
         control_columns[0].markdown("<p style='text-align: center;'> Precision: </p>", unsafe_allow_html=True)
-        control_columns[1].number_input("Precision: ", min_value = 0, step = 1, label_visibility = "collapsed", key = 'precision') # st.session_state["precision"]
+        precision = control_columns[1].number_input("Precision: ", min_value = 0, step = 1, label_visibility = "collapsed") 
         control_columns[2].markdown("<p style='text-align: center;'> Curve No. </p>", unsafe_allow_html=True)
-        control_columns[3].number_input("Number-of-Curves: ", min_value=0, step = 1, label_visibility = "collapsed", key = 'number_of_curve') # st.session_state["number_of_curve"]
+        number_of_curve = control_columns[3].number_input("Number-of-Curves: ", min_value=0, step = 1, label_visibility = "collapsed") 
 
-        if st.button('Save line positions'):
+        if st.button('Reset line positions'):
+            xmax, ymax = 75
+            xmin, ymin = 75
+            bg_image = None
+
+        if st.button('Scan the image'):
             df = pd.DataFrame({
                 'h_line_min_y': [h_line_min_y],
                 'h_line_max_y': [h_line_max_y],
@@ -82,10 +77,19 @@ def main():
                 'image_width': [image.size[0]] if bg_image else [None],
                 'image_height': [image.size[1]] if bg_image else [None],
                 'body_width': [width],
-                'body_height': [height]
+                'body_height': [height],
+                'precision': [precision],
+                'number_of_curve': [number_of_curve],
+
                 })
-            df.to_csv('line_positions.csv', index=False)
-            st.success('Line positions and image dimensions saved as CSV file')
+            df.to_csv('user_input.csv', index=False)
+            # Delete the prediction_target.jpg file
+            if os.path.exists('prediction_target.jpg'):
+                os.remove('prediction_target.jpg')
+
+            if bg_image is not None:
+                image = Image.open(bg_image)
+                image.save('prediction_target.jpg')
 
     desc, input_, output_ = st.tabs(["Description", "Input", "Output"])
     with desc:
@@ -196,63 +200,24 @@ def main():
             width=width if canvas_resized else None,
         )
         
+        with output_:
+            # with columrow[1]:
+            st.markdown("<h3 style='text-align: center;'>Output</h3>", unsafe_allow_html=True)
+            # to make the button centered aligned
 
-        # Save the uploaded image as prediction_target.jpg
-        if bg_image is not None:
-            image = Image.open(bg_image)
-            image.save('prediction_target.jpg')
-        padreset = st.columns(3)
-        with padreset[0]:
-            st.empty()
-        with padreset[1]:
-            if st.button('Reset line positions'):
-                df = pd.DataFrame({
-                    'h_line_min_y': [0],
-                    'h_line_max_y': [0],
-                    'v_line_min_x': [0],
-                    'v_line_max_x': [0],
-                    'image_width': [None],
-                    'image_height': [None],
-                    'body_width': [0],
-                    'body_height': [0]
-                })
+            padrow = st.columns(3)
 
-                df.to_csv('line_positions.csv', index=False)
-                st.success('Line positions and image dimensions reset to 0')
-            if st.button("Run Prediction"):
-                prediction()
-        with padreset[2]:
-            st.empty()
-
-        # Delete the prediction_target.jpg file
-        if os.path.exists('prediction_target.jpg'):
-            os.remove('prediction_target.jpg')
-
-            
-        # with columrow[1]:
-        st.markdown("<h3 style='text-align: center;'>Output</h3>", unsafe_allow_html=True)
-        # to make the button centered aligned
-        result_df = pd.DataFrame()
-        result_df["depth"] = np.linspace(0, 50, 100)
-        result_df["class1"] = np.linspace(0, 50, 100)
-        result_df["class2"] = np.linspace(0, 50, 100)
-        result_df["class3"] = np.linspace(0, 50, 100)
-
-        padrow = st.columns(3)
-        with padrow[0]:
-            st.empty()
-        with padrow[1]:
             st.download_button(
                 label = "Download data as CSV",
                 data = result_df.to_csv().encode('utf-8'),
                 file_name = "digitized_data.csv",
                 mime = 'text/csv',
             )
-        with padrow[2]:
-            st.empty()
-        
-        st.markdown("<p style='text-align: center;'>Result-Preview</p>", unsafe_allow_html=True)
-        st.dataframe(result_df, width=500, height = 700)        
+            with padrow[2]:
+                st.empty()
+            
+            st.markdown("<p style='text-align: center;'>Result-Preview</p>", unsafe_allow_html=True)
+            st.dataframe(result_df, width=500, height = 700)        
     
 if __name__ == "__main__":
     main()
