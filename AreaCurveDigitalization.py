@@ -209,7 +209,7 @@ def main():
 
             st.download_button(
                 label = "Download data as CSV",
-                data = result_df.to_csv().encode('utf-8'),
+                # data = result_df.to_csv().encode('utf-8'),
                 file_name = "digitized_data.csv",
                 mime = 'text/csv',
             )
