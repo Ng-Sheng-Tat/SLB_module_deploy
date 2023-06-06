@@ -29,15 +29,6 @@ def main():
         st.markdown("<h2 style='text-align: center;'> <strong>Input<strong> </h2>", unsafe_allow_html=True)
         stroke_width = st.sidebar.slider("Stroke width: ", 1, 25, 2)
         bg_image = st.sidebar.file_uploader("Background image:", type=["png", "jpg", "jpeg"])
-        if bg_image is not None:
-            image = Image.open(bg_image)
-            width, height = image.size
-            height_red = 800
-            if height > height_red:
-                ratio = height_red / float(height)
-                width_red = int(ratio * width)
-                image_red = image.resize((width, height), Image.ANTIALIAS)
-                canvas_resized = True
     
         # Add sliders to control the positions of the horizontal and vertical lines
         st.markdown("<b><span style='color:green'>Y-min (%):</span></b>", unsafe_allow_html=True)
@@ -90,6 +81,21 @@ def main():
             if bg_image is not None:
                 image = Image.open(bg_image)
                 image.save('prediction_target.jpg')
+        if bg_image is not None:
+            image = Image.open(bg_image)
+            width, height = image.size
+            height_red = 800
+            if height > height_red:
+                ratio = height_red / float(height)
+                width_red = int(ratio * width)
+                image_red = image.resize((width, height), Image.ANTIALIAS)
+                canvas_resized = True
+                
+        # Calculate the y-coordinates of the horizontal lines and the x-coordinates of the vertical lines based on the slider values
+        h_line_min_y = int(height * st.session_state["ymin"] / 100)
+        h_line_max_y = int(height * st.session_state["ymax"] / 100)
+        v_line_min_x = int(width * st.session_state["xmax"] / 100)
+        v_line_max_x = int(width * st.session_state["xmin"] / 100)
 
     desc, input_, output_ = st.tabs(["Description", "Input", "Output"])
     with desc:
@@ -105,12 +111,6 @@ def main():
 
     with input_:
         st.markdown("<h3 style='text-align: center;'>Input</h3>", unsafe_allow_html=True)
-
-        # Calculate the y-coordinates of the horizontal lines and the x-coordinates of the vertical lines based on the slider values
-        h_line_min_y = int(height * st.session_state["ymin"] / 100)
-        h_line_max_y = int(height * st.session_state["ymax"] / 100)
-        v_line_min_x = int(width * st.session_state["xmax"] / 100)
-        v_line_max_x = int(width * st.session_state["xmin"] / 100)
 
         # Create a canvas component
         st_canvas(
