@@ -3,12 +3,27 @@ from PIL import Image
 import streamlit as st
 from streamlit_drawable_canvas import st_canvas
 import os
+import time
 
-def scan(width, height, bgimg, img, h_line_min_position, h_line_max_position, v_line_min_position, 
+def scan(inputdf):
+    time.sleep(5)
+
+def document_input(width, height, h_line_min_position, h_line_max_position, v_line_min_position, 
          v_line_max_position, depth_min, depth_max, precision, number_of_curve):
-    pass
-    
-    
+    dataframe_input = pd.DataFrame()
+    dataframe_input["width"] = width
+    dataframe_input["height"] = height
+    dataframe_input["h_line_min_position"] = h_line_min_position
+    dataframe_input["h_line_max_position"] = h_line_max_position
+    dataframe_input["v_line_min_position"] = v_line_min_position
+    dataframe_input["v_line_max_position"] = v_line_max_position
+    dataframe_input["depth_min"]= depth_min 
+    dataframe_input["depth_max"]= depth_max
+    dataframe_input["precision"]= precision
+    dataframe_input["number_of_curve"] = number_of_curve
+    dataframe_input.to_csv('output.csv', index = False)
+
+    return dataframe_input
 # Specify canvas parameters in application
 def main():
     st.set_page_config(layout='wide')
@@ -17,7 +32,6 @@ def main():
     v_line_color_1 = "red"
     v_line_color_2 = "black"
     bg_color = "#eee"
-    realtime_update = True
     accuracy = 1
     width = 800
     height = 800
@@ -46,7 +60,26 @@ def main():
         control_columns[2].markdown("<p style='text-align: center;'> Curve No. </p>", unsafe_allow_html=True)
         number_of_curve = control_columns[3].number_input("Number-of-Curves: ", key = "number_of_curve", min_value=0, step = 1, label_visibility = "collapsed") 
 
-    
+        if st.button('Reset line positions'):
+            st.session_state['ymin'], st.session_state['xmin'] = 25
+            st.session_state['ymax'], st.session_state['xmax'] = 75
+            bg_image = None
+
+        if st.button('Scan the image'):
+            with st.spinner(key="document"):
+                inputdf = document_input(width, height, bg_image, image, h_line_min_position, h_line_max_position, v_line_min_position, v_line_max_position, depth_min, depth_max, precision, number_of_curve)
+                # Delete the prediction_target.jpg file
+                if os.path.exists('prediction_target.jpg'):
+                    os.remove('prediction_target.jpg')
+
+                if bg_image is not None:
+                    image = Image.open(bg_image)
+                    image.save('prediction_target.jpg')
+                st.success("Running the documentation process")
+            with st.spinner(key="spinner_model"):
+                scan(inputdf)
+                st.success("Running the documentation process")
+
     if bg_image is not None:
         image = Image.open(bg_image)
         width, height = image.size
